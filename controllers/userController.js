@@ -5,9 +5,9 @@ const bcryptjs = require("bcryptjs");
 
 exports.postRegister=async(req,res)=>{
 try {
-    const { email,username,fullname,bio,department,graduationYear,password} = req.body;
+    const { email,userName,fullName,bio,department,graduationYear,password} = req.body;
     // basic validation
-    if (!fullname || !username || !email || !department || !graduationYear || !password) {
+    if (!fullName || !userName || !email || !password || !department || !graduationYear) {
         return res.status(401).json({
             message: "All fields are required.",
             success: false
@@ -23,8 +23,8 @@ try {
     const hashedPassword = await bcryptjs.hash(password, 16);
 
     await User.create({
-        fullname,
-        username,
+        fullName,
+        userName,
         email,
         password: hashedPassword,
         department,
@@ -36,7 +36,13 @@ try {
         success: true
     })
 
-} catch (error) {
+} 
+
+catch (error) {
     console.log(error);
+    return res.status(500).json({
+        message: "Server Error Occurred",
+        success : false
+    })
 } 
 }
