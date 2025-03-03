@@ -159,3 +159,24 @@ exports.getProfile = async (req, res) => {
         });
     }
 };
+
+exports.getLogout = async (req, res) => {
+    try {
+        // Clearing token cookie
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'development'
+        });
+
+        return res.status(200).json({
+            message: "Logged out successfully",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error during logout",
+            success: false
+        });
+    }
+};
