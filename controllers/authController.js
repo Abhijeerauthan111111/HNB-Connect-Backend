@@ -18,6 +18,8 @@ exports.postRegister = async(req, res, next) => {
             })
         }
 
+
+
         // Generate username from email dheeraj_21134501038@hnbgu.edu.in to dheeraj8301
         const baseUsername = email.split('@')[0];   
 
@@ -27,6 +29,29 @@ exports.postRegister = async(req, res, next) => {
 
         const username = name+last4Digits;
         
+
+        //checking role
+        let role = "student";
+
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth();
+
+        if(graduationYear < currentYear ){
+            role = "alumni";
+
+        }
+        else if (graduationYear == currentYear){
+            if(currentMonth > 5){
+                
+                role = "alumni";
+
+            }
+                  
+        }
+
+
+
         
         // Check for existing email
         const existingUser = await User.findOne({ email });
@@ -47,14 +72,16 @@ exports.postRegister = async(req, res, next) => {
             email,
             password: hashedPassword,
             department,
-            graduationYear
+            graduationYear,
+            role
         });
         
         await user.save();
 
         return res.status(201).json({
             message: "Account created successfully.",
-            success: true
+            success: true,
+            role: user.role
         });
 
     } catch (error) {
