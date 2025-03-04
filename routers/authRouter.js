@@ -5,7 +5,6 @@ const isauth = require('../config/auth')
 
 authRouter.post("/register", authController.postRegister); 
 authRouter.post("/login", authController.postLogin);
-authRouter.get("/profile", isauth, authController.getProfile);
 authRouter.get("/logout", isauth, authController.getLogout);
 
 module.exports = authRouter;

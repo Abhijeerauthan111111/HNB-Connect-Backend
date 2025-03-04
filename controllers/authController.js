@@ -18,11 +18,16 @@ exports.postRegister = async(req, res, next) => {
             })
         }
 
-        // Generate username from email 
-        const baseUsername = email.split('@')[0];
-        const username = baseUsername;
-       
+        // Generate username from email dheeraj_21134501038@hnbgu.edu.in to dheeraj8301
+        const baseUsername = email.split('@')[0];   
 
+        const [name, number] = baseUsername.split('_');
+
+        const last4Digits = number.slice(-4);
+
+        const username = name+last4Digits;
+        
+        
         // Check for existing email
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -31,7 +36,7 @@ exports.postRegister = async(req, res, next) => {
                 success: false
             });
         }
-         
+           
         //password hashing
         const hashedPassword = await bcryptjs.hash(password, 16);
 
@@ -133,31 +138,6 @@ exports.postLogin = async(req, res, next) => {
     success: false
     });
 }
-};
-
-// Add this new controller
-exports.getProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user).select('-password');
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found",
-                success: false
-            });
-        }
-        
-        res.status(200).json({
-            message: "profile found",
-            success: true,
-            user
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: "Error fetching profile",
-            success: false
-        });
-    }
 };
 
 exports.getLogout = async (req, res) => {

@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser');
 
 // Local Module
 const errorController = require("./controllers/errorController");
-// const userRouter = require("./routers/userRouter");
+const userRouter = require("./routers/userRouter");
 const authRouter = require('./routers/authRouter');
 const MONGO_DB_URL =
 `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@airbnb.wtoi7.mongodb.net/${process.env.MONGO_DB_DATABASE}`;
@@ -24,7 +24,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(authRouter);
-// app.use(userRouter);
+app.use(userRouter);
 
 app.use(errorController.get404);
 
