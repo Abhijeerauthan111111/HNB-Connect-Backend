@@ -2,10 +2,30 @@
 const User = require("../models/User");
 const bcryptjs = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const { departmentValidator, graduationYearValidator, passwordValidator, emailValidator, fullNameValidator } = require("./validations");
+const { validationResult } = require("express-validator");
 
 //register new user
 
-exports.postRegister = async(req, res, next) => {
+exports.postRegister = [
+    fullNameValidator,
+    emailValidator,
+    passwordValidator,
+
+    graduationYearValidator,
+    departmentValidator,
+
+    async(req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+          message: errors.array().map(err => err.msg),
+          success: false
+        });
+      }
+
+
+
     try {
         console.log("User came for signup", req.body)
         const { email, fullName, department, graduationYear, password } = req.body;
@@ -92,7 +112,8 @@ exports.postRegister = async(req, res, next) => {
             success: false
         });
     }
-};
+}
+];
 
 exports.postLogin = async(req, res, next) => {
     try {
